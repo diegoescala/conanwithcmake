@@ -11,3 +11,8 @@ class Repo1Recipe(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+
+    def layout(self):
+        #set build folder
+        self.folders.build = "build"
+        self.folders.generators = "build"
