@@ -15,4 +15,5 @@ class Repo1Recipe(ConanFile):
     def layout(self):
         #set build folder
         self.folders.build = "build"
+        self.folders.source = "."
         self.folders.generators = "build"

@@ -1,5 +1,7 @@
+#include <iostream>
 #include "../include/repo1.h"
 
-int main() {
-    return 0;
+void Repo1::repo1()
+{
+    std::cout << "repo1" << std::endl;
 }
