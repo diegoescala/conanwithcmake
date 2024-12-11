@@ -1,3 +1,5 @@
+#pragma once 
+
 class Repo1
 {
 private:

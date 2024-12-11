@@ -1,6 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake
 from conan.tools.files import copy
+import os
 
 class Repo1Recipe(ConanFile):
     name = "repo1"
@@ -16,6 +17,7 @@ class Repo1Recipe(ConanFile):
     def layout(self):
         self.folders.build = "build"
         self.folders.generators = "build"
+        self.cpp.package.libs = ["repo1"]
 
     def build(self):
         cmake = CMake(self)
@@ -23,10 +25,27 @@ class Repo1Recipe(ConanFile):
         cmake.build()
 
     def package(self):
-        # Copy headers from source include dir to package include dir
-        copy(self, "*.h", dst=f"{self.package_folder}/include", src="include")
-        # Copy libs from build directory
-        copy(self, "*.a", src="build", dst="lib", keep_path=False)
+        # Copy headers
+        copy(self, "*.h", src=os.path.join(self.source_folder, "include"), dst=os.path.join(self.package_folder, "include"))
+        
+        # The build_folder is already pointing to the build directory
+        lib_src = self.build_folder  # Remove the extra "build" from the path
+        lib_dst = os.path.join(self.package_folder, "lib")
+        
+        self.output.info(f"Copying library from {lib_src} to {lib_dst}")
+        copy(self, "librepo1.a", src=lib_src, dst=lib_dst, keep_path=False)
+        
+        # Verify the copy
+        if os.path.exists(os.path.join(lib_dst, "librepo1.a")):
+            self.output.info("Library successfully copied!")
+        else:
+            self.output.error("Library not copied to destination!")
+            # Add more debug info
+            self.output.info(f"Contents of {lib_src}:")
+            for root, dirs, files in os.walk(lib_src):
+                for file in files:
+                    if file.endswith('.a'):
+                        self.output.info(f"Found .a file: {os.path.join(root, file)}")
 
     def package_info(self):
         self.cpp_info.libs = ["repo1"]  # Name of your library
