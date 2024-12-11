@@ -25,8 +25,10 @@ class Repo1Recipe(ConanFile):
         cmake.build()
 
     def package(self):
-        # Copy headers
-        copy(self, "*.h", src=os.path.join(self.source_folder, "include"), dst=os.path.join(self.package_folder, "include"))
+        # Copy headers preserving the repo1/ subdirectory
+        copy(self, "*.h", src=os.path.join(self.source_folder, "include"), 
+             dst=os.path.join(self.package_folder, "include"),
+             keep_path=True)  # Changed to True to preserve directory structure
         
         # The build_folder is already pointing to the build directory
         lib_src = self.build_folder  # Remove the extra "build" from the path
