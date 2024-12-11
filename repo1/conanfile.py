@@ -12,7 +12,7 @@ class Repo1Recipe(ConanFile):
     default_options = {"arch": "armv8"}
     platform = "armv8"
     
-    exports_sources = "CMakeLists.txt", "src/*", "include/*"
+    exports_sources = "CMakeLists.txt", "src/*", "include/*", "Config.cmake.in"
 
     def layout(self):
         self.folders.build = "build"
