@@ -6,14 +6,17 @@ class Repo1Recipe(ConanFile):
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"
+    options = {"arch": ["armv8", "x86"]}
+    default_options = {"arch": "armv8"}
+    platform = "armv8"
+    
+    exports_sources = "CMakeLists.txt", "src/*", "include/*"
+
+    def layout(self):
+        self.folders.build = "build"
+        self.folders.generators = "build"
 
     def build(self):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
-
-    def layout(self):
-        #set build folder
-        self.folders.build = "build"
-        self.folders.source = "."
-        self.folders.generators = "build"
