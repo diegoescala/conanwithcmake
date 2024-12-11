@@ -1,5 +1,6 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake
+from conan.tools.files import copy
 
 class Repo1Recipe(ConanFile):
     name = "repo1"
@@ -20,3 +21,13 @@ class Repo1Recipe(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
+
+    def package(self):
+        # Copy headers from source include dir to package include dir
+        copy(self, "*.h", dst=f"{self.package_folder}/include", src="include")
+        # Copy libs from build directory
+        copy(self, "*.a", src="build", dst="lib", keep_path=False)
+
+    def package_info(self):
+        self.cpp_info.libs = ["repo1"]  # Name of your library
+        self.cpp_info.includedirs = ["include"]  # Specify include directory
