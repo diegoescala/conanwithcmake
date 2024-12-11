@@ -5,6 +5,8 @@ project(repo1)
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(repo1 STATIC src/repo1.cpp)
+add_library(repo1::repo1 ALIAS repo1)
+
 target_include_directories(repo1 PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -21,6 +23,19 @@ install(TARGETS repo1
 install(EXPORT repo1Targets
     FILE repo1Targets.cmake
     NAMESPACE repo1::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/repo1
+)
+
+# Generate and install the config file
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/repo1Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/repo1
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/repo1Config.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/repo1
 )
 
